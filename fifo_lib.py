@@ -9,9 +9,13 @@ class FIFO:
         self.source_fields = source_fields
         self.buy_operations = buy_operations
         self.sell_operations = sell_operations
+        self.all_operations = buy_operations + sell_operations
         
     def init(self):
-        self.source_df = pd.read_excel(self.file_path)
+        source_df = pd.read_excel(self.file_path)
+        source_df = source_df[ (source_df['type'].isin(self.all_operations) ) ]
+        self.source_df = source_df
+        
         source_fields = self.source_fields
         df = self.source_df.copy()
         df['id'] = df[source_fields['order_id']]
@@ -29,6 +33,9 @@ class FIFO:
         df = df.sort_values(by=['date'])
         self.calc_df = df
         return(self.calc_df)
+    
+    def print_source_df(self):
+        return(self.source_df)
     
     def df_to_excel(self, path):
         self.result_df.to_excel(path)
