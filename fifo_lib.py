@@ -12,11 +12,12 @@ class FIFO:
         self.all_operations = buy_operations + sell_operations
         
     def init(self):
-        source_df = pd.read_excel(self.file_path)
-        source_df = source_df[ (source_df['type'].isin(self.all_operations) ) ]
-        self.source_df = source_df
         
         source_fields = self.source_fields
+        source_df = pd.read_excel(self.file_path)
+        source_df = source_df[ (source_df[source_fields['operation_type']].isin(self.all_operations) ) ]
+        self.source_df = source_df
+        
         df = self.source_df.copy()
         df['id'] = df[source_fields['order_id']]
         df['type'] = df[source_fields['operation_type']]
